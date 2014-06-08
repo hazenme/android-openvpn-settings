@@ -1,0 +1,136 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.6.1'
+    }
+}
+
+project(":app_api14") {
+    apply plugin: 'android'
+    android {
+        compileSdkVersion 14
+    }
+    dependencies {
+        compile project(':lib_app')
+        compile project(':lib_openvpn4')
+        instrumentTestCompile project(':lib_test')
+    }
+}
+
+project(":app_api4") {
+    apply plugin: 'android'
+    android {
+        compileSdkVersion 4
+    }
+    dependencies {
+        compile project(':lib_app')
+        instrumentTestCompile project(':lib_test')
+    }
+}
+
+//TODO: rename to lib_app_api4
+project(":lib_app") {
+    apply plugin: 'android-library'
+    android {
+        compileSdkVersion 4
+    }
+    dependencies {
+	compile project (':lib_openvpn')
+	compile project (':lib_shared')
+	compile project (':lib_service_impl')
+	compile files( 'libs/android-support-v4.jar', 'libs/httpmime-4.1.2.jar')
+    }
+}
+
+project(":lib_service_impl") {
+    apply plugin: 'android-library'
+    android {
+        compileSdkVersion 14
+    }
+    dependencies {
+	compile project (':lib_service_api')
+	compile project (':lib_shared')
+    }
+}
+
+project(":lib_shared") {
+    apply plugin: 'android-library'
+    android {
+        compileSdkVersion 14
+    }
+    dependencies {
+        compile files('libs/bugsense3.2.2.jar')
+    }
+}
+
+project(":lib_service_api") {
+    apply plugin: 'android-library'
+    android {
+        compileSdkVersion 4
+    }
+}
+
+//TODO: rename to lib_openvpn_api14
+project(":lib_openvpn4") {
+    apply plugin: 'android-library'
+    android {
+        compileSdkVersion 14
+    }
+}
+
+//TODO: rename to lib_openvpn_api4
+project(":lib_openvpn") {
+    apply plugin: 'android-library'
+    android {
+        compileSdkVersion 4
+    }
+}
+
+project(":lib_test") {
+    apply plugin: 'android-library'
+    android {
+        compileSdkVersion 4
+    }
+    dependencies {
+	compile project (':lib_shared')
+	compile files('libs/dexmaker-1.0.jar', 'libs/dexmaker-mockito-1.0.jar', 'libs/mockito-all-1.9.5.jar');
+    }
+}
+
+subprojects {
+    android {
+        buildToolsVersion "18.0"
+
+        // Setup legacy project structure.
+        // TODO: switch to new project structure one build is working
+        sourceSets {
+            main {
+                manifest.srcFile 'AndroidManifest.xml'
+                java.srcDirs = ['src']
+                resources.srcDirs = ['src']
+                aidl.srcDirs = ['src']
+                renderscript.srcDirs = ['src']
+                res.srcDirs = ['res']
+                assets.srcDirs = ['assets']
+            }
+
+            instrumentTest {
+                java.srcDirs = ['test/src']
+                resources.srcDirs = ['test/src']
+                aidl.srcDirs = ['test/src']
+                renderscript.srcDirs = ['test/src']
+                res.srcDirs = ['test/res']
+                assets.srcDirs = ['test/assets']
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.8'
+}
+
